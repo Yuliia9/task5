@@ -9,21 +9,20 @@
 
 
 
-
-
 unsigned int my_strprintf(const char* str)
 {
-	unsigned int len;
-	char* copy;
 	if (str == NULL)
 	{
-		return ERROR;
+		puts("printf(): Parameter  is a null pointer.");
+		return 0;
 	}
-	len = my_strlen(str);
-	copy = (char*)malloc(len*sizeof(char));
-	memcpy(copy, str, len);
-	copy[len] = '\0';
-	return printf("%s", copy);
+	const char* temp = str;
+	while (*temp != STREND)
+	{
+		++temp;
+	}
+	puts(temp);
+	return 1;
 }
 
 /********************************************************************************/
@@ -353,5 +352,3 @@ char* my_strtok(char* str, const char* delimiters)
 	last = tokenend + 1;
 	return tokenbeg;
 }
-
-

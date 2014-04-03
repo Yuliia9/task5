@@ -18,15 +18,6 @@
 
 int main(void)
 {
-	char a[] = "....token.is.good\x23";
-	char b[] = "aef\x23";
-	char* token;
-	token = my_strtok(a, ".\x23");
-	while (token != NULL)
-	{
-		my_strprintf(token);
-		token = my_strtok("\x23", ".\x23");
-	}
 	
 	return 0;
 }
