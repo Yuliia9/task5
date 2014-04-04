@@ -16,12 +16,12 @@ unsigned int my_strprintf(const char* str)
 		puts("printf(): Parameter  is a null pointer.");
 		return 0;
 	}
-	const char* temp = str;
-	while (*temp != STREND)
+	unsigned int i = 0;
+	while (str[i] != STREND)
 	{
-		++temp;
+		printf("%c", str[i]);
+		++i;
 	}
-	puts(temp);
 	return 1;
 }
 

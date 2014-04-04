@@ -18,7 +18,10 @@
 
 int main(void)
 {
-	
+	char a[] = "abcd\x23";
+	char b[10];
+	my_strcpy(a, b);
+	my_strprintf(b);
 	return 0;
 }
 

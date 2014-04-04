@@ -1,7 +1,9 @@
+
 /*
 *@file		my_string.h
 *@brief		header file that defines prototypes of functions for working with C strings
 */
+
 
 #ifndef MY_STRING_H_
 #define MY_STRING_H_
