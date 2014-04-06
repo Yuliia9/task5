@@ -13,28 +13,25 @@ unsigned int my_strprintf(const char* str)
 {
 	if (str == NULL)
 	{
-		puts("printf(): Parameter  is a null pointer.");
 		return 0;
 	}
-	unsigned int i = 0;
-	while (str[i] != STREND)
+	while (*str != STREND)
 	{
-		printf("%c", str[i]);
-		++i;
+		printf("%c", *(str));
+		++str;
 	}
 	return 1;
 }
 
 /********************************************************************************/
-size_t my_strlen(const char* str)
+int my_strlen(const char* str)
 {
-	size_t len = 0;
+	int len = 0;
 	if (str == NULL)
 	{
-		puts("strlen(): Parameter  is a null pointer.");
 		return ERROR;
 	}
-	while (str[len] != STREND)
+	while (*str++ != STREND)
 	{
 		++len;
 	}
@@ -44,31 +41,35 @@ size_t my_strlen(const char* str)
 /********************************************************************************/
 char* my_strcpy(char* destination, const char* source) 
 {
-	unsigned int len;
-	if (destination == NULL || source == NULL)
+	int len;
+	if (source == NULL)
 	{
-		puts("strcpy(): Destination or source pointer is a null pointer.");
 		return NULL;
 	}
 	len = my_strlen(source);
-	memcpy(destination, source, len);
-	destination[len] = STREND;
+	destination = (char*) malloc(sizeof(char)* len);
+	if (destination == NULL)
+	{
+		return NULL;
+	}
+	memcpy(destination, source, len + 1);
 	return destination;
 }
 
 /********************************************************************************/
 char* my_strncpy_s(char* destination, const char* source, size_t num)
 {
-	unsigned int len;
-	if (destination == NULL || source == NULL)
+	int len;
+	if (source == NULL)
 	{
-		puts("strncpy_s(): Destination or source pointer is a null pointer.");
 		return NULL;
 	}
 	len = my_strlen(source);
-	if (len < num)
+	num = num < len ? num : len;
+	destination = (char*)malloc(sizeof(char)* num);
+	if (destination == NULL)
 	{
-		num = len;
+		return NULL;
 	}
 	memcpy(destination, source, num);
 	destination[num] = STREND;
@@ -76,76 +77,57 @@ char* my_strncpy_s(char* destination, const char* source, size_t num)
 }
 
 /********************************************************************************/
-char* my_strncpy(char* destination, const char* source, size_t num)
-{
-	unsigned int len;
-	if (destination == NULL || source == NULL)
-	{
-		puts("strncpy(): Destination or source pointer is a null pointer.");
-		return NULL;
-	}
-	len = my_strlen(source);
-	if (len < num)
-	{
-		memcpy(destination, source, num + 1);
-		while (num - len)
-		{
-			destination[len] = 0;
-			++len;
-		}
-	}
-	else
-	{
-		memcpy(destination, source, num);
-	}
-	return destination;
-}
-
-/********************************************************************************/
 char* my_strcat(char* destination, const char* source) 
 {
-	unsigned int len_d, len_s;
+	int len_d, len_s;
+	char* temp;
 	if (destination == NULL || source == NULL)
 	{
-		puts("strcat(): Destination or source pointer is a null pointer.");
 		return NULL;
 	}
 	len_d = my_strlen(destination);
-	len_s = my_strlen(source);
-	memcpy(destination + len_d, source, len_s);
-	len_d += len_s;
-	destination[len_d] = STREND;
-	return destination;
-}
-
-/*******************************************************************************/
-char* my_strncat(char* destination, const char* source, size_t num)
-{
-	unsigned int len_d, len_s;
-	if (destination == NULL || source == NULL)
+ 	len_s = my_strlen(source);
+	temp = (char*)malloc(sizeof(char) * (len_s + len_d + 1));
+	if (temp == NULL)
 	{
-		puts("strncat(): Destination or source pointer is a null pointer.");
 		return NULL;
 	}
-	len_d = my_strlen(destination);
-	len_s = my_strlen(source);
-	if (len_s < num)
+	memcpy(temp, destination, len_d);
+ 	memcpy(temp + len_d, source, len_s + 1);
+	destination = temp;
+ 	return destination;
+ }
+ 
+ /*******************************************************************************/
+ char* my_strncat(char* destination, const char* source, size_t num)
+ {
+ 	int len_d, len_s;
+	char* temp;
+ 	if (destination == NULL || source == NULL)
+ 	{
+ 		return NULL;
+ 	}
+ 	len_d = my_strlen(destination);
+ 	len_s = my_strlen(source);
+	num = num < len_s ? num : len_s;
+	temp = (char*)malloc(sizeof(char)* (len_d + num + 1));
+	if (temp == NULL)
 	{
-		num = len_s;
+		return NULL;
 	}
-	memcpy(destination + len_d, source, num);
-	len_d += num;
-	destination[len_d] = STREND;
+	memcpy(temp, destination, len_d);
+	memcpy(temp + len_d, source, num);
+	*(temp + len_d + len_s) = STREND;
+	destination = temp;
 	return destination;
-}
-
+ }
+ 
 /******************************************************************************/
 int my_strcmp(const char* str1, const char* str2)
 {
-	unsigned int len1, len2;
+	int len1, len2;
 	if (str1 == NULL || str2 == NULL)
 	{
-		puts("strcmp(): One of parameters is a null pointer.");
 		return NULL;
 	}
 	len1 = my_strlen(str1);
@@ -167,10 +149,9 @@ int my_strcmp(const char* str1, const char* str2)
 /******************************************************************************/
 int my_strncmp(const char* str1, const char* str2, size_t num)
 {
-	unsigned int len1, len2;
+	int len1, len2;
 	if (str1 == NULL || str2 == NULL)
 	{
-		puts("strncmp(): One of parameters is null pointer.");
 		return NULL;
 	}
 	len1 = my_strlen(str1);
@@ -185,46 +166,40 @@ int my_strncmp(const char* str1, const char* str2, size_t num)
 		{
 			return -1;
 		}
-		else
-		{
-			return memcmp(str1, str2, num);
-		}
 	}
-	else
-	{
-		return memcmp(str1, str2, num);
-	}
+
+	return memcmp(str1, str2, num);
 }
 
 /******************************************************************************/
-char* my_strchr(const char* str, int character)
+char* my_strchr(const char* str, const char character)
 {
 	if (str == NULL)
 	{
-		puts("strchr(): Parameter is a null pointer.");
 		return NULL;
 	}
 	return (char*) memchr(str, character, my_strlen(str));
 }
 
 /*****************************************************************************/
-char* my_strrchr(char* str, int character)
+const char* my_strrchr(const char* str, const char character)
 {
-	unsigned int len;
+	int len;
 	if (str == NULL)
 	{
-		puts("strrchr(): Parameter is a null pointer.");
 		return NULL;
 	}
 	len = my_strlen(str);
+	str += len;
 	while (len)
 	{
-		if (str[len-1] == character)
+		if (*str == character)
 		{
-			return (str + len - 1);
+			return str;
 		}
 		else
 		{
+			--str;
 			--len;
 		}
 	}
@@ -234,37 +209,34 @@ char* my_strrchr(char* str, int character)
 /*****************************************************************************/
 size_t my_strcspn(const char * str1, const char * str2)
 {
-	unsigned int len1, len2, i;
+	int len1, len2, i;
 	if (str1 == NULL || str2 == NULL)
 	{
-		puts("strcspn(): One of parameters is a null pointer.");
 		return NULL;
 	}
-	len1 = my_strlen(str1);
 	len2 = my_strlen(str2);
-	for (i = 0; i < len1; ++i)
+	for (i = 0; *str1 != STREND; ++i, ++str1)
 	{
-		if (memchr(str2, str1[i], len2) != NULL)
+		if (memchr(str2, *str1, len2) != NULL)
 		{
 			return i;
 		}
 	}
-	return len1;
+	return i;
 }
 
 /*****************************************************************************/
 size_t my_strspn(const char* str1, const char* str2)
 {
-	unsigned int len2, i;
+	int len2, i;
 	if (str1 == NULL || str2 == NULL)
 	{
-		puts("strspn(): One of parameters is a null pointer.");
 		return NULL;
 	}
 	len2 = my_strlen(str2);
-	for (i = 0; str1[i] != STREND; ++i)
+	for (i = 0; *str1 != STREND; ++i, ++str1)
 	{
-		if (memchr(str2, str1[i], len2) == NULL)
+		if (memchr(str2, *str1, len2) == NULL)
 		{
 			break;
 		}
@@ -275,40 +247,38 @@ size_t my_strspn(const char* str1, const char* str2)
 /****************************************************************************/
 char* my_strpbrk(char* str1, const char* str2)
 {
-	unsigned int i, len2;
+	int i, len2;
 	if (str1 == NULL || str2 == NULL)
 	{
-		puts("strpbkr(): One of the parameters is a null pointer.");
 		return NULL;
 	}
 	len2 = my_strlen(str2);
-	for (i  = 0; str1[i] != STREND; ++i)
+	for (i  = 0; *str1 != STREND; ++i, ++str1)
 	{
-		if ((char*) memchr(str2, str1[i], len2) != NULL)
+		if ((char*) memchr(str2, *str1, len2) != NULL)
 		{
-			return (str1 + i);
+			return str1;
 		}
 	}
 	return NULL;
 }
 
 /****************************************************************************/
-char* my_strstr(char* str1, const char* str2)
+const char* my_strstr(const char* str1, const char* str2)
 {
-	unsigned int i, len2;
+	int len2;
 	if (str1 == NULL || str2 == NULL)
 	{
-		puts("strstr(): One of the parameters is a null pointer.");
 		return NULL;
 	}
 	len2 = my_strlen(str2);
-	for (i = 0; str1[i] != STREND; ++i)
+	for (; *str1 != STREND; ++str1)
 	{
-		if (str1[i] == str2[0])
+		if (*str1 == *str2)
 		{
-			if (memcmp((str1 + i), str2, len2) == 0)
+			if (memcmp(str1, str2, len2) == 0)
 			{
-				return (str1 + i);
+				return str1;
 			}
 		}
 	}
@@ -321,17 +291,15 @@ char* my_strtok(char* str, const char* delimiters)
 	static char* last = NULL;
 	char* tokenbeg;
 	char* tokenend;
-	unsigned int i = 0;
 	if (delimiters == NULL)
 	{
-		puts("strtok(): Delimiters cannot be a null pointer.");
 		return NULL;
 	}
-	if (str[0] != STREND)
+	if (str != NULL)
 	{
-		last = str;
+		last = my_strcpy(last, str);
 	}
-	if ((last[0] == STREND) && (str[0] == STREND))
+	if ((*last == STREND) && (str == NULL))
 	{
 		return NULL;
 	}
@@ -348,7 +316,7 @@ char* my_strtok(char* str, const char* delimiters)
 		tokenend = my_strpbrk(tokenend + 1, delimiters);
 
 	}
-	*tokenend = STREND;
 	last = tokenend + 1;
+	*tokenend = STREND;
 	return tokenbeg;
 }

@@ -1,4 +1,3 @@
-
 /*
 *@file		my_string.h
 *@brief		header file that defines prototypes of functions for working with C strings
@@ -12,44 +11,34 @@
 
 /*character that defines the new end of C string*/
 #define STREND '#'
-
-const unsigned int ERROR = 0;
 typedef unsigned int size_t;
+const int ERROR = -1;
 
 /*
 * @brief					Display C string (string with STREND end)
 * @param	[in]			const char* str - a pointer to C string with STREND end.
-* @return	unsigned int	Returns a number of displayed strings 
+* @return	unsigned int	Returns 0 if pointer is NULL otherwise: 
+							return 1 if string was printed
 */
 unsigned int my_strprintf(const char* str);
 
 /*
 * @brief			Returns the length of the C string str
 * @param	[in]	const char* str - a pointer to C string.
-* @return	size_t	Return NULL if pointer to C string is null pointer, otherwise:
+* @return	size_t	Return ERROR if pointer to C string is null pointer, otherwise:
 					return the length of string
 */
-size_t my_strlen(const char* str);
+int my_strlen(const char* str);
 
 /*
-* @brief				Copies the C string pointed by source into the array pointed by destination, 
+* @brief				Created a copy of C string source and return pointer to this copy,
 						including the terminating STREND character 
-* @param	[in/out]	char* destination - a pointer to the destination array where the content is to be copied.
+* @param	[in/out]	char* destination - a pointer to the destination C string where the content is to be copied.
 			[in]		const char* source - a pointer to C string to be copied.
-* @return	char*		Return NULL if pointer to destination or source is a null pointer, otherwise:
+* @return	char*		Return NULL if pointer to source is a null pointer, otherwise:
 						return a pointer to copied string
 */
 char* my_strcpy(char* destination, const char* source);
-
-/*
-* @brief				Copies the first num characters of source to destination
-* @param	[in/out]	char* destination - a pointer to the destination array where the content is to be copied.
-			[in]		const char* source - a pointer to C string to be copied.
-			[in]		size_t num - number or characters needed to be copied
-* @return	char*		Return NULL if pointer to destination or source is a null pointer, otherwise:
-						return a pointer to copied string
-*/
-char* my_strncpy(char* destination, const char* source, size_t num);
 
 /*
 * @brief				Copies the first num characters of source to destination
@@ -63,7 +52,7 @@ char* my_strncpy(char* destination, const char* source, size_t num);
 char* my_strncpy_s(char* destination, const char* source, size_t num);
 
 /*
-* @brief				Appends a copy of the source string to the destination string
+* @brief				Appends a copy of the source string to the destination string an created new string for result
 * @param	[in/out]	char* destination - a pointer to the destination array where the content is to be append.
 			[in]		const char* source - a pointer to C string to be copied.
 * @return	char*		Return NULL if pointer to destination or source is a null pointer, otherwise:
@@ -111,7 +100,7 @@ int my_strncmp(const char* str1, const char* str2, size_t num);
 * @return	char*	Return NULL if pointer to str is a null pointer or if  the character is not found, otherwise:
 					return a pointer to the first occurrence of character in str.
 */
-char* my_strchr(const char* str, int character);
+char* my_strchr(const char* str, const char character);
 
 /*
 * @brief			Finds the last occurrence of character in the C string str.
@@ -120,7 +109,7 @@ char* my_strchr(const char* str, int character);
 * @return	char*	Return NULL if pointer to str is a null pointer or if  the character is not found, otherwise:
 					return a pointer to the first occurrence of character in str.
 */
-char* my_strrchr(char* str, int character);
+const char* my_strrchr(const char* str, const char character);
 
 /*
 * @brief			Scans str1 for the first occurrence of any of the characters that are part of str2, 
@@ -162,7 +151,7 @@ char* my_strpbrk(char* str1, const char* str2);
 					return a pointer to the first occurrence in str1 of the entire 
 					sequence of characters specified in str2.
 */
-char* my_strstr(char* str1, const char* str2);
+const char* my_strstr(const char* str1, const char* str2);
 
 /*
 * @brief				Split str into tokens, which are sequences of contiguous characters 
