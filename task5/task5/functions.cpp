@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "my_string.h"
 #include <stdlib.h>
-#include <string.h>
+#include <memory.h>
 
 
 
@@ -93,7 +93,8 @@ char* my_strcat(char* destination, const char* source)
 		return NULL;
 	}
 	memcpy(temp, destination, len_d);
- 	memcpy(temp + len_d, source, len_s + 1);
+ 	memcpy(temp + len_d, source, len_s);
+	*(temp + len_d + len_s) = STREND;
 	destination = temp;
  	return destination;
  }
@@ -297,8 +298,9 @@ char* my_strtok(char* str, const char* delimiters)
 	}
 	if (str != NULL)
 	{
-		last = my_strcpy(last, str);
+		last = str;
 	}
+
 	if ((*last == STREND) && (str == NULL))
 	{
 		return NULL;
@@ -310,7 +312,7 @@ char* my_strtok(char* str, const char* delimiters)
 		last += my_strlen(last);
 		return tokenbeg;
 	}
-	while ((tokenend - tokenbeg) <= 1)
+	while ((tokenend - tokenbeg) < 1)
 	{
 		tokenbeg = tokenend + 1;
 		tokenend = my_strpbrk(tokenend + 1, delimiters);

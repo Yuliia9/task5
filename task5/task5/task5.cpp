@@ -30,7 +30,7 @@ int main(void)
 	/*strcat test*/
 	char a[] = "123\x23";
 	char* b = "ab\x23";
-	b = my_strcat(b, a);
+	b = my_strcat(b, " ");
 	puts("strcat test");
 	my_strprintf(b);
 	puts("\n");
@@ -68,7 +68,7 @@ int main(void)
 	puts("\n");
 
 	/*strtok test*/
-	char str[] = "abcd de ab\x23";
+	char str[] = "was that a dream\x23";
 	const char* delimiters = " \x23";
 	char* token;
 	puts("strtok test");
